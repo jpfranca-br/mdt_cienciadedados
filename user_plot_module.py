@@ -14,6 +14,11 @@ labels={'Região': 'Region',
     'Aérea_pct': 'Aérea_ %'
 }
 
+
+def ensure_directory_exists(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
 def stack_percent(merged_data):
     global labels
     summarized_data = merged_data.groupby(['Ano', 'Região'])[['Marítima', 'Aérea']].sum().reset_index()
@@ -55,7 +60,7 @@ def stack_percent(merged_data):
         barmode='stack'
     )
 
-
+    ensure_directory_exists('images')
     fig.write_image('images/stack_percent.png')
     fig.write_html('images/stack_percent.html')
     fig.show()
@@ -91,7 +96,7 @@ def correlation_matrix(merged_data):
             yaxis=dict(autorange='reversed'),
             coloraxis_colorbar=dict(title='Correlation')
         )
-        
+        ensure_directory_exists('images')
         fig.write_image('images/correlation_matrix.png')
         fig.write_html('images/correlation_matrix.html')
         fig.show()
@@ -127,7 +132,7 @@ def radar(merged_data):
         ),
         legend_title='Region of Origin'
     )
-    
+    ensure_directory_exists('images')
     fig.write_image('images/radar.png')
     fig.write_html('images/radar.html')
     fig.show()
@@ -156,7 +161,7 @@ def bubble(merged_data):
         yaxis_title='GNI per Capita (USD)',
         legend_title='Region of Origin'
     )
-    
+    ensure_directory_exists('images')
     fig.write_image('images/bubble.png')
     fig.write_html('images/bubble.html')
     fig.show()
@@ -181,7 +186,7 @@ def boxplot_h(merged_data):
         legend_title='Region of Origin',
         yaxis=dict(range=[0, merged_data['Total'].max() * 1.0])
     )
-    
+    ensure_directory_exists('images')
     fig.write_image('images/boxplot_h.png')
     fig.write_html('images/boxplot_h.html')
     fig.show()
@@ -206,7 +211,7 @@ def boxplot_v(merged_data):
         legend_title='Region of Origin',
         xaxis=dict(range=[0, merged_data['Total'].max() * 1.0])
     )
-    
+    ensure_directory_exists('images')
     fig.write_image('images/boxplot_v.png')
     fig.write_html('images/boxplot_v.html')
     fig.show()
@@ -229,7 +234,7 @@ def worldmap_bubble(merged_data):
         geo=dict(showframe=False, showcoastlines=False),
         coloraxis_colorbar=dict(title='Total Visitors')
     )
-    
+    ensure_directory_exists('images')
     fig.write_image('images/worldmap_bubble.png')
     fig.write_html('images/worldmap_bubble.html')
     fig.show()
