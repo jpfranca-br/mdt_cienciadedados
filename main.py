@@ -130,6 +130,9 @@ def main():
     merged_data = merge_data(viagens, indicators, country_match_df)
     show_data_profiling(merged_data)
     summary_df = display_and_save_metrics(merged_data)
+    print("###                Criando gráficos                   ###")
+    print("###                                                   ###")
+    print("### Caso algum gráfico não abra, aperte F5 no browser ###")
     p.correlation_matrix(merged_data)
     p.radar(merged_data)
     p.bubble(merged_data)
@@ -137,7 +140,6 @@ def main():
     p.boxplot_v(merged_data)
     p.worldmap_bubble(merged_data)
     p.stack_percent(merged_data)
-    print("### Caso algum gráfico não abra, aperte F5 no browser ###")
     input("###   Executado com Sucesso. Tecle algo para fechar   ###")
 
 if __name__ == "__main__":
