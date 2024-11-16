@@ -4,22 +4,26 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>MDT - Ciencia de Dados</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .gallery { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .gallery-item { flex: 1 1 calc(50% - 20px); max-width: calc(50% - 20px); box-sizing: border-box; }
+        .gallery-item img { width: 100%; height: auto; }
+        @media (max-width: 600px) {
+            .gallery-item { flex: 1 1 100%; max-width: 100%; }
+        }
+    </style>
 </head>
 <body>
     <h1>Graficos interativos</h1>
-    <ul>
-        <li><a href='https://mdt-cienciadedados.surge.sh/boxplot_horizontal.html' target=boxplot_horizontal.html>boxplot_horizontal.html</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/boxplot_horizontal.png' target=boxplot_horizontal.png>boxplot_horizontal.png</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/boxplot_vertical.html' target=boxplot_vertical.html>boxplot_vertical.html</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/boxplot_vertical.png' target=boxplot_vertical.png>boxplot_vertical.png</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/bubble.html' target=bubble.html>bubble.html</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/bubble.png' target=bubble.png>bubble.png</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/correlation_matrix.html' target=correlation_matrix.html>correlation_matrix.html</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/correlation_matrix.png' target=correlation_matrix.png>correlation_matrix.png</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/radar.html' target=radar.html>radar.html</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/radar.png' target=radar.png>radar.png</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/worldmap_bubble.html' target=worldmap_bubble.html>worldmap_bubble.html</a><br></li>
-        <li><a href='https://mdt-cienciadedados.surge.sh/worldmap_bubble.png' target=worldmap_bubble.png>worldmap_bubble.png</a><br></li>
-    </ul>
+    <div class='gallery'>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/boxplot_horizontal.html' target=boxplot_horizontal><img src='https://mdt-cienciadedados.surge.sh/boxplot_horizontal.png' alt='boxplot_horizontal'></a></div>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/boxplot_vertical.html' target=boxplot_vertical><img src='https://mdt-cienciadedados.surge.sh/boxplot_vertical.png' alt='boxplot_vertical'></a></div>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/bubble.html' target=bubble><img src='https://mdt-cienciadedados.surge.sh/bubble.png' alt='bubble'></a></div>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/correlation_matrix.html' target=correlation_matrix><img src='https://mdt-cienciadedados.surge.sh/correlation_matrix.png' alt='correlation_matrix'></a></div>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/radar.html' target=radar><img src='https://mdt-cienciadedados.surge.sh/radar.png' alt='radar'></a></div>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/stack_percent.html' target=stack_percent><img src='https://mdt-cienciadedados.surge.sh/stack_percent.png' alt='stack_percent'></a></div>
+        <div class='gallery-item'><a href='https://mdt-cienciadedados.surge.sh/worldmap_bubble.html' target=worldmap_bubble><img src='https://mdt-cienciadedados.surge.sh/worldmap_bubble.png' alt='worldmap_bubble'></a></div>
+    </div>
 </body>
 </html>

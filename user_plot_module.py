@@ -69,7 +69,7 @@ def stack_percent(merged_data, show):
         legend_title='Transport Type',
         barmode='stack'
     )
-    save_plot("correlation_matrix",fig,show)
+    save_plot("stack_percent",fig,show)
     
 def correlation_matrix(merged_data, show):
     # Select only numeric columns and exclude specified columns
