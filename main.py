@@ -4,11 +4,46 @@ import os
 import unidecode
 import numpy as np
 import io
+import keyboard
+
+def main():
+    show_reports = False  # Show reports on screen?
+    show_plots = True  # Show plots on screen?
+
+    if not os.path.exists('images'):
+        os.makedirs('images')
+    if not os.path.exists('result'):
+        os.makedirs('result')
+
+    print(f"Showing reports on screen: {show_reports}")
+    print(f"Showing plots on screen: {show_plots}")
+
+    viagens, indicators = load_csv_files()
+    country_match_df = create_or_load_country_match(viagens, indicators)
+
+    if country_match_df is not None and not country_match_df.empty:
+        merged_data = merge_data(viagens, indicators, country_match_df)
+        data_profiling(merged_data, show_reports)
+        summary_df = correlation(merged_data, show_reports)
+        print("Building plots. It will take a few seconds...")
+        plot_names = [
+            'correlation_matrix',
+            'radar',
+            'bubble',
+            #'boxplot_h',
+            'boxplot_v',
+            'worldmap_bubble',
+            'stack_percent'
+        ]
+        plot(merged_data, show_plots, 'mt', plot_names) #mp for multiprocessor, #mt for multithread, whatever else for single thread
+        print("Plots saved.")
+
+    print("All done! Press any key to close.")
+    keyboard.read_event()
 
 # Load the original CSV files
 def load_csv_files():
     print("Loading original CSV files...")
-
     viagens = pd.read_csv('data/viagens.csv', skipinitialspace=True).apply(lambda x: x.str.strip() if x.dtype == 'object' else x)
     viagens['País'] = viagens['País'].apply(lambda x: unidecode.unidecode(x) if isinstance(x, str) else x)
     indicators = pd.read_csv('data/indicators.csv', skipinitialspace=True)
@@ -20,7 +55,7 @@ def load_csv_files():
 
 # Create or load the country match table
 def create_or_load_country_match(viagens, indicators):
-    print("Generating or loading country match table...")
+    print("Building or loading country match table...")
     if not os.path.exists('data/country_match.csv'):
         viagens_countries = sorted(viagens['País'].unique())
         indicators_countries = sorted(indicators['Country'].unique())
@@ -32,14 +67,15 @@ def create_or_load_country_match(viagens, indicators):
             'indicators_country': indicators_countries
         })
         country_match_df.to_csv('result/country_match.csv', index=False)
-        print("Country match table generated and saved to 'country_match.csv'. Please fill in the appropriate matches.")
-        exit()
+        print("ERROR: File 'data/country_match.csv' not found.")
+        print("       Standard table generated and saved to 'result/country_match.csv'.")
+        print("       Please make the appropriate country matches and save csv to data/ folder.")
+        return None
     else:
         country_match_df = pd.read_csv('data/country_match.csv')
         print("Loaded existing country match table from 'country_match.csv'.")
     return country_match_df
 
-# Merge viagens and indicators using country match table
 def merge_data(viagens, indicators, country_match_df):
     # Merges viagens and indicators dataframes, adding travels per capita and travels per 1000 people columns
     print("Merging viagens and indicators using country match table...")
@@ -62,19 +98,21 @@ def merge_data(viagens, indicators, country_match_df):
     rename_column('Transport, storage and communication (ISIC I)','Transport, storage and comms (ISIC I)')
     # Merge
     merged_data = viagens.merge(country_match_df, how='left', left_on='País', right_on='viagens_country')
+    unique_countries_matched = merged_data['País'].nunique()
+    print(f"Number of countries matched: {unique_countries_matched}")
     merged_data = merged_data.merge(indicators, how='left', left_on=['indicators_country', 'Ano'], right_on=['Country', 'Year'])
     # Calculate travels per capita / per 1000 people
     merged_data['travels_per_capita'] = merged_data.apply(lambda row: row['Total'] / row['Population'] if row['Population'] > 0 else np.nan, axis=1)
     merged_data['travels_per_1000_people'] = merged_data['travels_per_capita'] * 1000
     # Save to file
     merged_data.to_csv('result/merged_viagens_indicators.csv', index=False)
-    print("Travels per capita and travels per 1000 people columns added and saved to 'merged_viagens_indicators.csv'.")
+    print("Data merged and enriched.")
+    print("Full table saved to 'result/merged_viagens_indicators.csv'.")
     return merged_data
 
-# Show Data Profiling Report (Simplificada)
-def show_data_profiling(merged_data):
-    print("Detailed data profiling report")
-    print("------------------------------")
+# Data Profiling Report
+def data_profiling(merged_data, show):
+    print("Building detailed data profiling report...")
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     # Generate a detailed profiling report and show on screen
@@ -89,15 +127,17 @@ def show_data_profiling(merged_data):
     profiling_report += str(merged_data.isnull().sum()) + "\n\n"
     profiling_report += "Descrição estatística dos dados:\n"
     profiling_report += str(merged_data.describe(include='all')) + "\n\n"
-    print(profiling_report)
+    if (show):
+        print(profiling_report)
     # Save the report to a text file
     filename = 'result/profiling_report.txt'
     with open(filename, "w") as file:
         file.write(profiling_report)
     print(f"Data profiling report saved to '{filename}'.")
 
-# Display correlation metrics and save to CSV
-def display_and_save_metrics(merged_data):
+# Generate correlation and save to CSV
+def correlation(merged_data, show):
+    print("Building correlation report...")
     regions = merged_data['Região'].unique()
     table_summary = []
     for region in regions:
@@ -111,36 +151,40 @@ def display_and_save_metrics(merged_data):
             correlation = data_year['GNI (USD)'].corr(data_year['Total']) if not data_year.empty else None
             table_summary.append([year, region, round(travel_per_1000,2), int(gni_per_capita), round(correlation,2)])
     summary_df = pd.DataFrame(table_summary, columns=['Year', 'Region', 'Travel/1000', 'GNI per Capita', 'Correlation'])
-    print("Correlation: Total Travel x GNI")
-    print("-------------------------------")
-    print(summary_df)
-    filename = 'result/travel_x_GNI_correlation.csv'
+    if (show):
+        print("Correlation: Total Travel x GNI")
+        print("-------------------------------")
+        print(summary_df)
+    filename = 'result/correlation.csv'
     summary_df.to_csv(filename, index=False)
-    print(f"Summary table saved to '{filename}'.")
+    print(f"Correlation report saved to '{filename}'.")
     return summary_df
 
-# Main script
-def main():
-    if not os.path.exists('images'):
-        os.makedirs('images')
-    if not os.path.exists('result'):
-        os.makedirs('result')
-    viagens, indicators = load_csv_files()
-    country_match_df = create_or_load_country_match(viagens, indicators)
-    merged_data = merge_data(viagens, indicators, country_match_df)
-    show_data_profiling(merged_data)
-    summary_df = display_and_save_metrics(merged_data)
-    print("###                Criando gráficos                   ###")
-    print("###                                                   ###")
-    print("### Caso algum gráfico não abra, aperte F5 no browser ###")
-    p.correlation_matrix(merged_data)
-    p.radar(merged_data)
-    p.bubble(merged_data)
-    p.boxplot_h(merged_data)
-    p.boxplot_v(merged_data)
-    p.worldmap_bubble(merged_data)
-    p.stack_percent(merged_data)
-    input("###   Executado com Sucesso. Tecle algo para fechar   ###")
+# Plot function
+def plot(merged_data, show_plots, multi, plot_names):
+    multi = multi.lower()
+    plot_functions = [
+        (getattr(p, name), merged_data, show_plots)
+        for name in plot_names if hasattr(p, name)
+    ]
+    if not plot_functions:
+        print("No valid plot names provided. Exiting plot function.")
+        return
+    if multi == 'mt':
+        import concurrent.futures
+        #import multiprocessing
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(func, *args) for func, *args in plot_functions]
+            concurrent.futures.wait(futures)
+    elif multi == 'mp':
+        import concurrent.futures
+        #import multiprocessing
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = [executor.submit(func, *args) for func, *args in plot_functions]
+            concurrent.futures.wait(futures)
+    else:
+        for func, *args in plot_functions:
+            func(*args)
 
 if __name__ == "__main__":
     main()

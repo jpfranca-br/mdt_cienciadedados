@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.express as px
 from sklearn.preprocessing import MinMaxScaler
 import os
+import webbrowser
 
 labels={'Região': 'Region',
     'Total': 'Visitors',
@@ -14,12 +15,21 @@ labels={'Região': 'Region',
     'Aérea_pct': 'Aérea_ %'
 }
 
+def save_plot(filename, fig, show):
+    # Save the plot to PNG and HTML
+    html_path = f"images/{filename}.html"
+    fig.write_image(f"images/{filename}.png", width=1280, height=720)
+    fig.write_html(html_path)
+    print(f"   {filename}")
+    
+    # Open the HTML file in the browser if 'show' is True
+    if show:
+        try:
+            webbrowser.open(f"file://{os.path.abspath(html_path)}", new=2)  # new=2 opens in a new tab, if possible
+        except Exception as e:
+            print(f"Error opening plot '{filename}': {e}")
 
-def ensure_directory_exists(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-def stack_percent(merged_data):
+def stack_percent(merged_data, show):
     global labels
     summarized_data = merged_data.groupby(['Ano', 'Região'])[['Marítima', 'Aérea']].sum().reset_index()
     # Create synthetic region "Todas"
@@ -59,13 +69,9 @@ def stack_percent(merged_data):
         legend_title='Transport Type',
         barmode='stack'
     )
-
-    ensure_directory_exists('images')
-    fig.write_image('images/stack_percent.png')
-    fig.write_html('images/stack_percent.html')
-    fig.show()
-
-def correlation_matrix(merged_data):
+    save_plot("correlation_matrix",fig,show)
+    
+def correlation_matrix(merged_data, show):
     # Select only numeric columns and exclude specified columns
     numeric_data = merged_data.select_dtypes(include='number').drop(columns=['CountryID', 'travels_per_capita', 'travels_per_1000_people', 'lat', 'lon'], errors='ignore')
     # Calculate correlation matrix for each year
@@ -96,12 +102,9 @@ def correlation_matrix(merged_data):
             yaxis=dict(autorange='reversed'),
             coloraxis_colorbar=dict(title='Correlation')
         )
-        ensure_directory_exists('images')
-        fig.write_image('images/correlation_matrix.png')
-        fig.write_html('images/correlation_matrix.html')
-        fig.show()
+        save_plot("correlation_matrix",fig,show)
 
-def radar(merged_data):
+def radar(merged_data, show):
     global labels
     indicators = ['Population', 'GNI (USD)', 'Total']
     sum_values = merged_data.groupby(['Ano', 'Região'])[indicators].sum().reset_index()
@@ -132,12 +135,9 @@ def radar(merged_data):
         ),
         legend_title='Region of Origin'
     )
-    ensure_directory_exists('images')
-    fig.write_image('images/radar.png')
-    fig.write_html('images/radar.html')
-    fig.show()
+    save_plot("radar",fig,show)
   
-def bubble(merged_data):
+def bubble(merged_data, show):
     global labels
     fig = px.scatter(
         merged_data.fillna({"Population": 1}),
@@ -161,12 +161,9 @@ def bubble(merged_data):
         yaxis_title='GNI per Capita (USD)',
         legend_title='Region of Origin'
     )
-    ensure_directory_exists('images')
-    fig.write_image('images/bubble.png')
-    fig.write_html('images/bubble.html')
-    fig.show()
-
-def boxplot_h(merged_data):
+    save_plot("bubble",fig,show)
+    
+def boxplot_h(merged_data, show):
     global labels
     fig = px.box(
         merged_data,
@@ -184,14 +181,12 @@ def boxplot_h(merged_data):
         xaxis_title='Region of Origin',
         yaxis_title='Visitors',
         legend_title='Region of Origin',
-        yaxis=dict(range=[0, merged_data['Total'].max() * 1.0])
+        #yaxis=dict(range=[0, merged_data['Total'].max() * 1.0])
+        yaxis=dict(range=[0, 250000])
     )
-    ensure_directory_exists('images')
-    fig.write_image('images/boxplot_h.png')
-    fig.write_html('images/boxplot_h.html')
-    fig.show()
+    save_plot("boxplot_horizontal",fig,show)
 
-def boxplot_v(merged_data):
+def boxplot_v(merged_data, show):
     global labels
     fig = px.box(
         merged_data,
@@ -209,14 +204,12 @@ def boxplot_v(merged_data):
         yaxis_title='Region of Origin',
         xaxis_title='Visitors',
         legend_title='Region of Origin',
-        xaxis=dict(range=[0, merged_data['Total'].max() * 1.0])
+        #xaxis=dict(range=[0, merged_data['Total'].max() * 1.0])
+        xaxis=dict(range=[0, 250000])
     )
-    ensure_directory_exists('images')
-    fig.write_image('images/boxplot_v.png')
-    fig.write_html('images/boxplot_v.html')
-    fig.show()
+    save_plot("boxplot_vertical",fig,show)
 
-def worldmap_bubble(merged_data):
+def worldmap_bubble(merged_data, show):
     global labels
     fig = px.scatter_geo(
         merged_data,
@@ -234,7 +227,4 @@ def worldmap_bubble(merged_data):
         geo=dict(showframe=False, showcoastlines=False),
         coloraxis_colorbar=dict(title='Total Visitors')
     )
-    ensure_directory_exists('images')
-    fig.write_image('images/worldmap_bubble.png')
-    fig.write_html('images/worldmap_bubble.html')
-    fig.show()
+    save_plot("worldmap_bubble",fig,show)
