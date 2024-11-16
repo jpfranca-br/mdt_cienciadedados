@@ -3,7 +3,7 @@
 ## **Descrição do Projeto**
 Este projeto foi desenvolvido como parte do trabalho final para a disciplina "Ciência de Dados Para Transformação Digital" no curso de pós-graduação em Transformação Digital da PUC-Rio, orientado pelo Professor Dr. Dan Reznik. O objetivo é realizar uma análise de dados para entender a relação entre fatores econômicos e o volume de visitantes de diferentes regiões, usando técnicas de análise, transformação, enriquecimento e visualização de dados.
 
-Apresentação do trabalho do grupo: [https://docs.google.com/presentation/d/1jNgEGhfBiQqjcvOPSasE-EeIk-bd8pTitylO-o2jOCA/edit?usp=sharing]([url](https://docs.google.com/presentation/d/1jNgEGhfBiQqjcvOPSasE-EeIk-bd8pTitylO-o2jOCA/edit?usp=sharing))
+Apresentação do trabalho do grupo: [https://docs.google.com/presentation/d/1jNgEGhfBiQqjcvOPSasE-EeIk-bd8pTitylO-o2jOCA/edit?usp=sharing](https://docs.google.com/presentation/d/1jNgEGhfBiQqjcvOPSasE-EeIk-bd8pTitylO-o2jOCA/edit?usp=sharing)
 
 Os gráficos interativos: [https://mdt-cienciadedados.surge.sh/](https://mdt-cienciadedados.surge.sh/)
 
