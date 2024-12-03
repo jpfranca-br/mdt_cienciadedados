@@ -90,5 +90,5 @@ Este projeto oferece uma análise robusta e ferramentas práticas para transform
   - [Carlos Blois](https://www.linkedin.com/in/carlos-blois-273398)
   - [Renzo Quedevez Malini](https://www.linkedin.com/in/renzomalini)
   - [Maria de Fátima S de Souza](https://www.linkedin.com/in/maria-f%C3%A1tima-soares-de-souza-pmp-6523411b)
-  - [Mirian Doherty] (https://www.linkedin.com/in/mhdoherty)
-  - [Roberto Wertman] (https://www.linkedin.com/in/bobwertman/)
+  - [Mirian Doherty](https://www.linkedin.com/in/mhdoherty)
+  - [Roberto Wertman](https://www.linkedin.com/in/bobwertman/)
