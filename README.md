@@ -79,3 +79,16 @@ As visualizações são salvas em formato PNG e HTML interativo na pasta `images
 4. **Diretório `images/`:** Contém gráficos PNG e HTML interativos prontos para visualização.
 
 Este projeto oferece uma análise robusta e ferramentas práticas para transformar dados brutos em insights visuais e métricas acionáveis.
+
+---
+
+## Contributors  
+
+- **Professor**: [Dr. Dan S. Reznik](https://www.linkedin.com/in/dan-s-reznik-bb49133)
+- **Time**:
+  - [João Paulo M. França](https://www.linkedin.com/in/jpfranca)
+  - [Carlos Blois](https://www.linkedin.com/in/carlos-blois-273398)
+  - [Renzo Quedevez Malini](https://www.linkedin.com/in/renzomalini)
+  - [Maria de Fátima S de Souza](https://www.linkedin.com/in/maria-f%C3%A1tima-soares-de-souza-pmp-6523411b)
+  - [Mirian Doherty] (https://www.linkedin.com/in/mhdoherty)
+  - [Roberto Wertman] (https://www.linkedin.com/in/bobwertman/)
